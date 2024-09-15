@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
 import moment from 'moment'; 
-import { Checkbox } from 'react-native-paper';  // Import Checkbox from react-native-paper
+import { Checkbox } from 'react-native-paper'; 
+import { Swipeable } from 'react-native-gesture-handler'; 
 
 const DateComponent = () => {
     return (
@@ -20,7 +21,7 @@ export default function HomeScreen() {
 
     // Add Task
     const addTask = () => {
-        setTasks([...tasks, { text: 'Take a note', description: '', labels: [], checked: false, expanded: false }]);
+        setTasks([...tasks, { text: '', description: '', labels: [], checked: false, expanded: false }]);
     };
 
     // Delete Task
@@ -55,82 +56,91 @@ export default function HomeScreen() {
 
     // Toggle card expansion
     const toggleExpand = (index: number) => {
-        // Collapse all other cards
-        const updatedTasks = tasks.map((task, i) =>
-            i === index ? { ...task, expanded: !task.expanded } : { ...task, expanded: false }
-        );
-        setTasks(updatedTasks);
-        setSelectedTaskIndex(task => (task !== index ? index : null));
+        if (selectedTaskIndex === index) {
+            // If the clicked card is already expanded, collapse it
+            setSelectedTaskIndex(null);
+        } else {
+            // Collapse the currently expanded card (if any) and expand the new one
+            setSelectedTaskIndex(index);
+        }
     };
 
-    // Handle click outside to collapse the task card
-    const handleTouchOutside = () => {
-        setTasks(tasks.map(task => ({ ...task, expanded: false })));
-        setSelectedTaskIndex(null);
-        Keyboard.dismiss(); // Dismiss keyboard when clicking outside
+    // Handle clicks outside of expanded card to collapse it
+    const handleOutsideClick = () => {
+        if (selectedTaskIndex !== null) {
+            setSelectedTaskIndex(null);
+        }
     };
+
+    // Swipeable render left
+    const renderLeftActions = (index: number) => (
+        <TouchableOpacity
+            style={styles.swipeAction}
+            onPress={() => deleteTask(index)}
+        >
+            <Text style={styles.swipeActionText}>Delete</Text>
+        </TouchableOpacity>
+    );
 
     return (
-        <TouchableWithoutFeedback onPress={handleTouchOutside}>
+        <TouchableWithoutFeedback onPress={handleOutsideClick}>
             <View style={styles.container}>
                 <View style={styles.content}>
                     <DateComponent />
                     <ScrollView style={styles.scrollContainer}>
                         <View style={styles.items}>
                             {tasks.map((task, index) => (
-                                <View key={index} style={[styles.taskCard, { borderWidth: task.expanded ? 1 : 0 }]}>
-                                    <TouchableOpacity
-                                        style={styles.taskContent}
-                                        onPressIn={() => toggleExpand(index)}
-                                        activeOpacity={1} // Prevents opacity change on touch
-                                    >
-                                        <View style={styles.textContainer}>
-                                            {task.expanded ? (
+                                <Swipeable
+                                    key={index}
+                                    renderLeftActions={() => renderLeftActions(index)}
+                                >
+                                    <View style={styles.taskCard}>
+                                        <TouchableOpacity
+                                            style={styles.taskContent}
+                                            onPressIn={() => toggleExpand(index)}
+                                            activeOpacity={1} // Prevents opacity change on touch
+                                        >
+                                            <View style={styles.textContainer}>
+                                                {selectedTaskIndex === index ? (
+                                                    <TextInput
+                                                        style={styles.textInput}
+                                                        placeholder="Take a note"
+                                                        placeholderTextColor="#aaa" // Gray placeholder text
+                                                        value={task.text}
+                                                        onChangeText={(text) => updateTitle(index, text)}
+                                                        onBlur={() => setEditedTitle('')} // Clear editedTitle on blur
+                                                        onFocus={() => setEditedTitle(task.text)} // Set editedTitle on focus
+                                                    />
+                                                ) : (
+                                                    <Text style={styles.taskText}>{task.text || "Take a note"}</Text>
+                                                )}
+                                            </View>
+
+                                            {/* Add the Checkbox on the right side */}
+                                            <Checkbox
+                                                status={task.checked ? 'checked' : 'unchecked'}
+                                                onPress={() => toggleCheckbox(index)}
+                                            />
+                                        </TouchableOpacity>
+
+                                        {/* Show the description, and make it editable only when expanded */}
+                                        <View>
+                                            {selectedTaskIndex === index ? (
                                                 <TextInput
                                                     style={styles.textInput}
-                                                    placeholder="Edit title"
-                                                    value={task.text}
-                                                    onChangeText={(text) => updateTitle(index, text)}
-                                                    onBlur={() => setEditedTitle('')} // Clear editedTitle on blur
-                                                    onFocus={() => setEditedTitle(task.text)} // Set editedTitle on focus
+                                                    placeholder="Add description"
+                                                    placeholderTextColor="#aaa" // Gray placeholder text
+                                                    value={task.description}
+                                                    onChangeText={(text) => updateDescription(index, text)}
+                                                    onBlur={() => setEditedDescription('')} // Clear editedDescription on blur
+                                                    onFocus={() => setEditedDescription(task.description)} // Set editedDescription on focus
                                                 />
                                             ) : (
-                                                <Text style={styles.taskText}>{task.text}</Text>
+                                                <Text style={styles.taskDescription}>{task.description || "No description"}</Text>
                                             )}
                                         </View>
-
-                                        {/* Add the Checkbox on the right side */}
-                                        <Checkbox
-                                            status={task.checked ? 'checked' : 'unchecked'}
-                                            onPress={() => toggleCheckbox(index)}
-                                        />
-                                    </TouchableOpacity>
-
-                                    {/* Show the description, and make it editable only when expanded */}
-                                    <View style={styles.descriptionContainer}>
-                                        {task.expanded ? (
-                                            <TextInput
-                                                style={styles.textInput}
-                                                placeholder="Add description"
-                                                value={task.description}
-                                                onChangeText={(text) => updateDescription(index, text)}
-                                                onBlur={() => setEditedDescription('')} // Clear editedDescription on blur
-                                                onFocus={() => setEditedDescription(task.description)} // Set editedDescription on focus
-                                            />
-                                        ) : (
-                                            <Text style={styles.taskDescription}>{task.description || "No description"}</Text>
-                                        )}
                                     </View>
-
-                                    {task.expanded && (
-                                        <TouchableOpacity
-                                            style={styles.modalButton}
-                                            onPress={() => deleteTask(index)}
-                                        >
-                                            <Text style={styles.modalButtonText}>Delete Note</Text>
-                                        </TouchableOpacity>
-                                    )}
-                                </View>
+                                </Swipeable>
                             ))}
                         </View>
                     </ScrollView>
@@ -155,18 +165,50 @@ const styles = StyleSheet.create({
     taskCard: { 
         marginBottom: 10, 
         borderRadius: 10, 
-        overflow: 'hidden',
-        borderColor: '#ddd', // Color of the border
-        borderBottomWidth: 1,
+        overflow: 'hidden', 
+        backgroundColor: '#f9f9f9' 
     },
-    taskContent: { flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#f9f9f9' },
+    taskContent: { 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        padding: 10, 
+        backgroundColor: '#f9f9f9' 
+    },
     textContainer: { flex: 1 },
     taskText: { fontSize: 16, fontWeight: 'bold' },
-    textInput: { padding: 10, borderColor: '#ddd', borderWidth: 1, borderRadius: 5, marginVertical: 5 },
-    descriptionContainer: { borderTopWidth: 1, borderColor: '#ddd', padding: 10 },
-    taskDescription: { fontSize: 14, color: '#666' },
-    modalButton: { backgroundColor: '#e74c3c', padding: 10, borderRadius: 5 },
+    textInput: { 
+        padding: 10, 
+        borderColor: '#ddd', 
+        borderWidth: 1, 
+        borderRadius: 5, 
+        marginVertical: 5 
+    },
+    taskDescription: { 
+        fontSize: 14, 
+        color: '#666', 
+        backgroundColor: '#f9f9f9', 
+        padding: 10
+    },
+    modalButton: { 
+        backgroundColor: '#e74c3c', 
+        padding: 10, 
+        borderRadius: 5 
+    },
     modalButtonText: { color: '#fff', textAlign: 'center' },
-    addButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#007bff', padding: 10, borderRadius: 5, margin: 10 },
-    addButtonText: { color: '#fff', fontSize: 16, marginLeft: 10 }
+    addButton: { 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        backgroundColor: '#007bff', 
+        padding: 10, 
+        borderRadius: 5, 
+        margin: 10 
+    },
+    addButtonText: { color: '#fff', fontSize: 16, marginLeft: 10 },
+    swipeAction: { 
+        backgroundColor: '#e74c3c', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        flex: 1 
+    },
+    swipeActionText: { color: '#fff', padding: 20, fontSize: 16 }
 });
