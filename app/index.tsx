@@ -79,6 +79,10 @@ export default function HomeScreen() {
                                         activeOpacity={1} // Prevents opacity change on touch
                                     >
                                         <View style={styles.textContainer}>
+                                        <Checkbox
+                                            status={task.checked ? 'checked' : 'unchecked'}
+                                            onPress={() => toggleCheckbox(index)}
+                                        />
                                             {selectedTaskIndex === index ? (
                                                 <TextInput
                                                     style={styles.textInput}
@@ -90,15 +94,13 @@ export default function HomeScreen() {
                                                     onFocus={() => setEditedTitle(task.text)} // Set editedTitle on focus
                                                 />
                                             ) : (
+                                                
                                                 <Text style={styles.taskText}>{task.text || "Take a note"}</Text>
                                             )}
                                         </View>
 
                                         {/* Add the Checkbox on the right side */}
-                                        <Checkbox
-                                            status={task.checked ? 'checked' : 'unchecked'}
-                                            onPress={() => toggleCheckbox(index)}
-                                        />
+                                       
                                     </TouchableOpacity>
 
                                     {/* Show the description, and make it editable only when expanded */}
@@ -149,14 +151,17 @@ const styles = StyleSheet.create({
     taskContent: { 
         flexDirection: 'row', 
         alignItems: 'center', 
-        padding: 10, 
+        padding: 5, 
+        
     },
     textContainer: { 
+        flex : 1,
+        flexDirection : 'row',
     },
-    taskText: { fontSize: 16, fontWeight: 'bold' },
+    taskText: { fontSize: 16, fontWeight: 'bold' ,top : 7,},
     textInput: { 
         padding: 10, 
-        borderColor: '#ddd', 
+        color : 'white',
         borderWidth: 1, 
         borderRadius: 5, 
         marginVertical: 5, 
@@ -167,19 +172,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9', 
         padding: 10
     },
-    modalButton: { 
-        backgroundColor: '#e74c3c', 
-        padding: 10, 
-        borderRadius: 5,
-    },
-    modalButtonText: { color: '#fff', textAlign: 'center' },
+
     addButton: { 
         flexDirection: 'row', 
         alignItems: 'center', 
         backgroundColor: '#007bff', 
         padding: 10, 
-        borderRadius: 5, 
-        margin: 10 
+        borderRadius: 17, 
+        margin: 10, 
+        top: -5,
     },
     addButtonText: { color: '#fff', fontSize: 16, marginLeft: 10 },
 });
