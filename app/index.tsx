@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Modal, TextInput, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
 import moment from 'moment'; 
+import { Checkbox } from 'react-native-paper';  // Import Checkbox from react-native-paper
 import styles from './styles'; 
 
 const DateComponent = () => {
@@ -11,29 +12,27 @@ const DateComponent = () => {
         </View>
     );
 };
-// test pull //
+
 export default function HomeScreen() {
-    
-    const [tasks, setTasks] = useState<{ text: string; description: string }[]>([
-        
-    ]);
+    const [tasks, setTasks] = useState<{ text: string; description: string; labels: string[]; checked: boolean }[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedTaskIndex, setSelectedTaskIndex] = useState<number | null>(null);
+    const [newLabel, setNewLabel] = useState('');
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
 
-    
+    // Add Task
     const addTask = () => {
-        setTasks([...tasks, { text: 'Take a note', description: '' }]);
+        setTasks([...tasks, { text: 'Take a note', description: '', labels: [], checked: false }]);
     };
 
-    
+    // Delete Task
     const deleteTask = (index: number) => {
         setTasks(tasks.filter((_, i) => i !== index));
         setModalVisible(false);
     };
 
-    
+    // Edit Title
     const editTitle = () => {
         if (selectedTaskIndex !== null && editedTitle.trim()) {
             const updatedTasks = tasks.map((task, index) =>
@@ -44,7 +43,7 @@ export default function HomeScreen() {
         }
     };
 
-    
+    // Edit Description
     const editDescription = () => {
         if (selectedTaskIndex !== null && editedDescription.trim()) {
             const updatedTasks = tasks.map((task, index) =>
@@ -53,6 +52,14 @@ export default function HomeScreen() {
             setTasks(updatedTasks);
             setEditedDescription('');
         }
+    };
+
+    // Toggle checkbox status
+    const toggleCheckbox = (index: number) => {
+        const updatedTasks = tasks.map((task, i) =>
+            i === index ? { ...task, checked: !task.checked } : task
+        );
+        setTasks(updatedTasks);
     };
 
     return (
@@ -70,11 +77,19 @@ export default function HomeScreen() {
                                     setModalVisible(true);
                                 }}
                             >
-                                <View>
-                                    <Text style={styles.taskText}>{task.text}</Text>
-                                    {task.description ? (
-                                        <Text style={styles.taskDescription}>{task.description}</Text>
-                                    ) : null}
+                                <View style={styles.taskContent}>
+                                    <View>
+                                        <Text style={styles.taskText}>{task.text}</Text>
+                                        {task.description ? (
+                                            <Text style={styles.taskDescription}>{task.description}</Text>
+                                        ) : null}
+                                    </View>
+
+                                    {/* Add the Checkbox on the right side */}
+                                    <Checkbox
+                                        status={task.checked ? 'checked' : 'unchecked'}
+                                        onPress={() => toggleCheckbox(index)}
+                                    />
                                 </View>
                             </TouchableOpacity>
                         ))}
