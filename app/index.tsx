@@ -14,36 +14,23 @@ const DateComponent = () => {
 
 export default function HomeScreen() {
     
-    const [tasks, setTasks] = useState<{ text: string; description: string; labels: string[] }[]>([
+    const [tasks, setTasks] = useState<{ text: string; description: string }[]>([
         
     ]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedTaskIndex, setSelectedTaskIndex] = useState<number | null>(null);
-    const [newLabel, setNewLabel] = useState('');
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
 
     
     const addTask = () => {
-        setTasks([...tasks, { text: 'Take a note', description: '', labels: [] }]);
+        setTasks([...tasks, { text: 'Take a note', description: '' }]);
     };
 
     
     const deleteTask = (index: number) => {
         setTasks(tasks.filter((_, i) => i !== index));
         setModalVisible(false);
-    };
-
-    
-    const addLabel = () => {
-        if (selectedTaskIndex !== null && newLabel.trim()) {
-            const updatedTasks = tasks.map((task, index) =>
-                index === selectedTaskIndex ? { ...task, labels: [...task.labels, newLabel] } : task
-            );
-            setTasks(updatedTasks);
-            setNewLabel('');
-            setModalVisible(false);
-        }
     };
 
     
@@ -88,13 +75,6 @@ export default function HomeScreen() {
                                     {task.description ? (
                                         <Text style={styles.taskDescription}>{task.description}</Text>
                                     ) : null}
-                                    <View style={styles.labelsContainer}>
-                                        {task.labels.map((label, i) => (
-                                            <Text key={i} style={styles.label}>
-                                                {label}
-                                            </Text>
-                                        ))}
-                                    </View>
                                 </View>
                             </TouchableOpacity>
                         ))}
@@ -138,16 +118,6 @@ export default function HomeScreen() {
                             >
                                 <Text style={styles.modalButtonText}>Delete Note</Text>
                             </TouchableOpacity>
-
-                            <View style={styles.addLabelContainer}>
-                                <TextInput
-                                    style={styles.textInput}
-                                    placeholder="Enter label"
-                                    value={newLabel}
-                                    onChangeText={setNewLabel}
-                                />
-                                <Button title="Add Label" onPress={addLabel} />
-                            </View>
                         </>
                     )}
                     <Button title="Close" onPress={() => setModalVisible(false)} />
