@@ -4,14 +4,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment'; 
 import { Checkbox } from 'react-native-paper'; 
 import { Swipeable } from 'react-native-gesture-handler'; 
+import { getBackgroundColorAsync } from 'expo-system-ui';
+import { DateComponent } from '@/components/date';
 
-const DateComponent = () => {
-    return (
-        <View style={styles.dateContainer}>
-            <Text style={styles.dateText}>{moment().format('MMMM DD')}</Text>
-        </View>
-    );
-};
 
 export default function HomeScreen() {
     const [tasks, setTasks] = useState<{ text: string; description: string; labels: string[]; checked: boolean; expanded: boolean }[]>([]);
@@ -75,7 +70,7 @@ export default function HomeScreen() {
     // Swipeable render left
     const renderLeftActions = (index: number) => (
         <TouchableOpacity
-            style={styles.swipeAction}
+style={styles.swipeAction}
             onPress={() => deleteTask(index)}
         >
             <Text style={styles.swipeActionText}>Delete</Text>
@@ -84,9 +79,13 @@ export default function HomeScreen() {
 
     return (
         <TouchableWithoutFeedback onPress={handleOutsideClick}>
-            <View style={styles.container}>
+            <View style={styles.container1}>
+            <DateComponent />
+
+
+                
                 <View style={styles.content}>
-                    <DateComponent />
+                    
                     <ScrollView style={styles.scrollContainer}>
                         <View style={styles.items}>
                             {tasks.map((task, index) => (
@@ -156,32 +155,41 @@ export default function HomeScreen() {
 
 // Styles for your component
 const styles = StyleSheet.create({
-    container: { flex: 1 },
-    content: { flex: 1 },
-    dateContainer: { paddingTop: 10, alignItems: "center" },
-    dateText: { fontSize: 18, fontWeight: 'bold' },
+    container1:{
+        flex : 1,
+
+    },
+    content:{
+        flex : 1,
+    },
+
+      
     scrollContainer: { flex: 1 },
     items: { margin: 10 },
     taskCard: { 
         marginBottom: 10, 
         borderRadius: 10, 
         overflow: 'hidden', 
-        backgroundColor: '#f9f9f9' 
+        
     },
     taskContent: { 
         flexDirection: 'row', 
         alignItems: 'center', 
         padding: 10, 
-        backgroundColor: '#f9f9f9' 
+        
     },
-    textContainer: { flex: 1 },
+    textContainer: { 
+         
+    },
+    
     taskText: { fontSize: 16, fontWeight: 'bold' },
     textInput: { 
         padding: 10, 
         borderColor: '#ddd', 
         borderWidth: 1, 
         borderRadius: 5, 
-        marginVertical: 5 
+        marginVertical: 5, 
+        
     },
     taskDescription: { 
         fontSize: 14, 
@@ -192,7 +200,8 @@ const styles = StyleSheet.create({
     modalButton: { 
         backgroundColor: '#e74c3c', 
         padding: 10, 
-        borderRadius: 5 
+        borderRadius: 5 ,
+        
     },
     modalButtonText: { color: '#fff', textAlign: 'center' },
     addButton: { 
@@ -210,5 +219,5 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         flex: 1 
     },
-    swipeActionText: { color: '#fff', padding: 20, fontSize: 16 }
+    swipeActionText: {color: '#fff', padding: 20, fontSize: 16 }
 });
