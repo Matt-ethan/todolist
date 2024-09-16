@@ -43,7 +43,8 @@ export default function HomeScreen() {
     };
 
     const handleOutsidePress = (task: { text: string; description: string }, index: number) => {
-        setTaskDescription(task.description);
+        setTaskText(task.text);  // Load the current task title
+        setTaskDescription(task.description);  // Load the current task description
         setEditingIndex(index);
         setModalVisible(true);
     };
