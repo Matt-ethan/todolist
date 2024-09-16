@@ -42,14 +42,14 @@ export default function HomeScreen() {
         setTasks(updatedTasks);
     };
 
-    const handleOutsidePress = () => {
+    const handleOutsidePress = (task: { text: string; description: string }, index: number) => {
         setTaskDescription(task.description);
         setEditingIndex(index);
         setModalVisible(true);
     };
 
     return (
-        <Pressable onPress={handleOutsidePress} style={styles.container1}>
+        <Pressable style={styles.container1}>
             <View style={styles.DateandTaskContainer}>
                 <DateComponent />
                 <View style={styles.taskContainer}>
@@ -65,7 +65,7 @@ export default function HomeScreen() {
                                             status={task.checked ? 'checked' : 'unchecked'}
                                             onPress={() => toggleCheckbox(index)}
                                         />
-                                        <Pressable onPress={() => openModalForEditing(index)} style={styles.editableContainer}>
+                                        <Pressable onPress={() => handleOutsidePress(task, index)} style={styles.editableContainer}>
                                             <Text style={[styles.taskText, task.checked && styles.checkedText]}>
                                                 {task.text || "Take a note"}
                                             </Text>
@@ -106,9 +106,9 @@ export default function HomeScreen() {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <View style ={styles.Container4}>
-                        <Text style={styles.modalTitle}>{editingIndex !== null ? 'Edit Task' : 'Create New Task'}</Text>
-                        <Pressable style={styles.modalButtonX} onPress={() => setModalVisible(false)}>
+                        <View style={styles.Container4}>
+                            <Text style={styles.modalTitle}>{editingIndex !== null ? 'Edit Task' : 'Create New Task'}</Text>
+                            <Pressable style={styles.modalButtonX} onPress={() => setModalVisible(false)}>
                                 <Text style={styles.modalButtonTextX}>x</Text>
                             </Pressable>
                         </View>
@@ -127,7 +127,6 @@ export default function HomeScreen() {
                             onChangeText={setTaskDescription}
                         />
                         <View style={styles.modalButtons}>
-                            
                             <Pressable style={styles.modalButton} onPress={addOrUpdateTask}>
                                 <Text style={styles.modalButtonText}>{editingIndex !== null ? 'Update Task' : 'Add Task'}</Text>
                             </Pressable>
@@ -148,12 +147,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     taskContainer: {
-        flex: 1, // This will make the ScrollView take the remaining space
+        flex: 1,
     },
     scrollContainer: {
         flex: 1,
-        top : 220,
-        height : 100,
+        top: 220,
+        height: 100,
     },
     items: {
         margin: 10,
@@ -163,10 +162,9 @@ const styles = StyleSheet.create({
         borderRadius: 15, 
         overflow: 'hidden', 
         position: 'relative',
-        borderWidth : 1,
-        backgroundColor : 'black',
-
-        borderColor : 'white',
+        borderWidth: 1,
+        backgroundColor: 'black',
+        borderColor: 'white',
     },
     checkedTaskCard: {
         opacity: 0.5,
@@ -183,23 +181,23 @@ const styles = StyleSheet.create({
         fontSize: 16, 
         fontWeight: 'bold', 
         top: -2,
-        color : 'white',
+        color: 'white',
     },
     checkedText: {
         textDecorationLine: 'line-through',
         color: '#aaa',
     },
     taskDescription: { 
-        top : -10,
+        top: -10,
         fontSize: 12, 
         color: '#666', 
         padding: 10,
         left: 30,
-        color : 'white',
-        width : '85%',
+        color: 'white',
+        width: '85%',
     },
     addButton: { 
-        justifyContent : 'center',
+        justifyContent: 'center',
         flexDirection: 'row', 
         alignItems: 'center', 
         backgroundColor: 'grey', 
@@ -217,7 +215,6 @@ const styles = StyleSheet.create({
         position: 'absolute', 
         right: 10, 
         top: 15,
-        
     },
     modalContainer: { 
         flex: 1, 
@@ -237,7 +234,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     modalTextInput: {
-        backgroundColor : '',
         borderRadius: 5,
         marginBottom: 10,
         color: 'black',
@@ -248,35 +244,31 @@ const styles = StyleSheet.create({
     },
     modalButton: {
         backgroundColor: '#007bff',
-        height : 30,
-        top : 6,
+        height: 30,
+        top: 6,
         borderRadius: 5,
-        width : '100%',
-        justifyContent : 'center',
-        alignItems : 'center',
-
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     modalButtonText: {
         color: 'white',
-        
     },
     Container4:{
-        flexDirection : 'row',
-
-        height : 30,
-        marginBottom : 10,
-        justifyContent : 'space-between',
+        flexDirection: 'row',
+        height: 30,
+        marginBottom: 10,
+        justifyContent: 'space-between',
     },
     modalButtonX:{
-            justifyContent : 'center',
-            alignItems : 'center',
-            
-            backgroundColor : 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
     },
-    modalButtonTextX : {
-        top : -20,
-        left : 8        ,
-        fontSize : 18,
-        color : 'grey',
-    }
+    modalButtonTextX: {
+        top: -20,
+        left: 8,
+        fontSize: 18,
+        color: 'grey',
+    },
 });
