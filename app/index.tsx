@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     modalButton: {
-        backgroundColor: '#324a5f',
+        backgroundColor: '#000038',
         height: 30,
         top: 6,
         borderRadius: 5,

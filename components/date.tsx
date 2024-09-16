@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   monthText: {
     top:-20,
-    fontSize: 50,
+    fontSize:55,
     color: '#7e6c6c',
     fontWeight : 'bold',
   },
