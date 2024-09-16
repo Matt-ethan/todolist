@@ -42,8 +42,9 @@ export default function HomeScreen() {
         setTasks(updatedTasks);
     };
 
-    const handleOutsidePress = (task: { text: string; description: string; labels: string[]; checked: boolean }, index: number) => {
-        setTaskDescription(task.description);
+    const handleOutsidePress = (task: { text: string; description: string }, index: number) => {
+        setTaskText(task.text);  // Load the current task title
+        setTaskDescription(task.description);  // Load the current task description
         setEditingIndex(index);
         setModalVisible(true);
     };
@@ -55,36 +56,39 @@ export default function HomeScreen() {
                 <View style={styles.taskContainer}>
                     <ScrollView style={styles.scrollContainer}>
                         <View style={styles.items}>
-                            {tasks.map((task: { text: string; description: string; labels: string[]; checked: boolean }, index: number) => (
-                                <Pressable key={index} onPress={() => handleOutsidePress(task, index)} style={styles.container1}>
-                                    <View style={[styles.taskCard, task.checked && styles.checkedTaskCard]}>
-                                        <View style={styles.taskContent}>
-                                            <Checkbox
-                                                status={task.checked ? 'checked' : 'unchecked'}
-                                                onPress={() => toggleCheckbox(index)}
-                                            />
-                                            <Pressable onPress={() => handleOutsidePress(task, index)} style={styles.editableContainer}>
-                                                <Text style={[styles.taskText, task.checked && styles.checkedText]}>
-                                                    {task.text || "Take a note"}
-                                                </Text>
-                                            </Pressable>
-                                        </View>
-
-                                        <Text style={[styles.taskDescription, task.checked && styles.checkedText]}>
-                                            {task.description || "No description"}
-                                        </Text>
-
-                                        <Pressable style={styles.deleteButton} onPress={() => deleteTask(index)}>
-                                            <Icon name="delete" size={16} color="midred" />
+                            {tasks.map((task, index) => (
+                                <View
+                                    key={index}
+                                    style={[styles.taskCard, task.checked && styles.checkedTaskCard]}
+                                >
+                                    <View style={styles.taskContent}>
+                                        <Checkbox
+                                            status={task.checked ? 'checked' : 'unchecked'}
+                                            onPress={() => toggleCheckbox(index)}
+                                        />
+                                        <Pressable onPress={() => handleOutsidePress(task, index)} style={styles.editableContainer}>
+                                            <Text style={[styles.taskText, task.checked && styles.checkedText]}>
+                                                {task.text || "Take a note"}
+                                            </Text>
                                         </Pressable>
                                     </View>
-                                </Pressable>
+
+                                    <Text style={[styles.taskDescription, task.checked && styles.checkedText]}>
+                                        {task.description || "No description"}
+                                    </Text>
+
+                                    <Pressable
+                                        style={styles.deleteButton}
+                                        onPress={() => deleteTask(index)}
+                                    >
+                                        <Icon name="delete" size={16} color="#7e6c6c" />
+                                    </Pressable>
+                                </View>
                             ))}
                         </View>
                     </ScrollView>
                 </View>
             </View>
-
             <Pressable style={styles.addButton} onPress={() => {
                 setTaskText('');
                 setTaskDescription('');
@@ -137,8 +141,11 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
     container1: {
-        backgroundColor: '#252525',
+        backgroundColor: '#edede9',
         flex: 1,
+    },
+    editableContainer: {
+
     },
     DateandTaskContainer: {
         flex: 1,
@@ -148,98 +155,107 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         flex: 1,
-        top: 220,
+        top: 180,
         height: 100,
     },
     items: {
         margin: 10,
     },
-    taskCard: {
-        marginBottom: 10,
-        borderRadius: 15,
-        overflow: 'hidden',
+    taskCard: { 
+        marginBottom: 10, 
+        borderRadius: 15, 
+        overflow: 'hidden', 
         position: 'relative',
-        borderWidth: 1,
-        backgroundColor: 'black',
-        borderColor: 'white',
+        backgroundColor: '#e2ddd6',
+        
     },
     checkedTaskCard: {
         opacity: 0.5,
     },
-    taskContent: {
-        flexDirection: 'row',
-        alignItems: 'center',
+    taskContent: { 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+
+        top : 10,
+        left : 10,
     },
-    taskText: {
-        fontSize: 16,
-        fontWeight: 'bold',
+    textContainer: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    taskText: { 
+        fontSize: 16, 
+        fontWeight: 'bold', 
         top: -2,
-        color: 'white',
+        color: '#6f5e5c',
     },
     checkedText: {
         textDecorationLine: 'line-through',
         color: '#aaa',
     },
-    taskDescription: {
-        top: -10,
-        fontSize: 12,
+    taskDescription: { 
+        top : -4,
+        fontSize: 12, 
+        // color: '#666', 
         padding: 10,
-        left: 30,
-        color: 'white',
+        left: 35,
+        marginBottom : 6,
+        color: '#7e6c6c',
         width: '85%',
     },
-    editableContainer: {
-        flex: 1,
-    },
-    addButton: {
+    addButton: { 
         justifyContent: 'center',
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: 'grey',
-        padding: 10,
-        borderRadius: 17,
-        margin: 10,
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        backgroundColor: '#000038', 
+        padding: 10, 
+        borderRadius: 17, 
+        margin: 10, 
         top: -5,
     },
-    addButtonText: {
-        color: '#fff',
-        fontSize: 16,
+    addButtonText: { 
+        color: '#CCC9DC', 
+        fontSize: 16, 
         marginLeft: 10,
+        fontWeight :'bold',
     },
-    deleteButton: {
-        position: 'absolute',
-        right: 10,
+    deleteButton: { 
+        position: 'absolute', 
+        right: 10, 
         top: 15,
+
     },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
+    modalContainer: { 
+        flex: 1, 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        backgroundColor: 'rgba(0,0,0,0.5)' 
     },
-    modalContent: {
-        width: '80%',
-        backgroundColor: '#fff',
-        padding: 20,
+    modalContent: { 
+        width: '80%', 
+        backgroundColor: '#edede9', 
+        padding: 20, 
         borderRadius: 10,
     },
-    modalTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
+    modalTitle: { 
+        fontSize: 20, 
+        fontWeight: 'bold', 
         marginBottom: 10,
+        color : '#7e6c6c',
     },
     modalTextInput: {
-        backgroundColor: '',
         borderRadius: 5,
         marginBottom: 10,
-        color: 'black',
+        color: '#grey',
+        backgroundColor : '#edede9',
+        
     },
     modalButtons: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
     modalButton: {
-        backgroundColor: '#007bff',
+        backgroundColor: '#000038',
         height: 30,
         top: 6,
         borderRadius: 5,
@@ -250,16 +266,16 @@ const styles = StyleSheet.create({
     modalButtonText: {
         color: 'white',
     },
-    Container4: {
+    Container4:{
         flexDirection: 'row',
         height: 30,
         marginBottom: 10,
         justifyContent: 'space-between',
     },
-    modalButtonX: {
+    modalButtonX:{
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
+        
     },
     modalButtonTextX: {
         top: -20,
