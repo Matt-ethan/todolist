@@ -80,7 +80,7 @@ export default function HomeScreen() {
                                         style={styles.deleteButton}
                                         onPress={() => deleteTask(index)}
                                     >
-                                        <Icon name="delete" size={16} color="midred" />
+                                        <Icon name="delete" size={16} color="#7e6c6c" />
                                     </Pressable>
                                 </View>
                             ))}
@@ -140,7 +140,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
     container1: {
-        backgroundColor: '#252525',
+        backgroundColor: '#edede9',
         flex: 1,
     },
     DateandTaskContainer: {
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         flex: 1,
-        top: 220,
+        top: 180,
         height: 100,
     },
     items: {
@@ -162,9 +162,8 @@ const styles = StyleSheet.create({
         borderRadius: 15, 
         overflow: 'hidden', 
         position: 'relative',
-        borderWidth: 1,
-        backgroundColor: 'black',
-        borderColor: 'white',
+        backgroundColor: '#e2ddd6',
+        
     },
     checkedTaskCard: {
         opacity: 0.5,
@@ -172,6 +171,9 @@ const styles = StyleSheet.create({
     taskContent: { 
         flexDirection: 'row', 
         alignItems: 'center', 
+
+        top : 10,
+        left : 10,
     },
     textContainer: {
         flex: 1,
@@ -181,40 +183,43 @@ const styles = StyleSheet.create({
         fontSize: 16, 
         fontWeight: 'bold', 
         top: -2,
-        color: 'white',
+        color: '#6f5e5c',
     },
     checkedText: {
         textDecorationLine: 'line-through',
         color: '#aaa',
     },
     taskDescription: { 
-        top: -10,
+        top : -4,
         fontSize: 12, 
         color: '#666', 
         padding: 10,
-        left: 30,
-        color: 'white',
+        left: 35,
+        marginBottom : 6,
+        color: '#7e6c6c',
         width: '85%',
     },
     addButton: { 
         justifyContent: 'center',
         flexDirection: 'row', 
         alignItems: 'center', 
-        backgroundColor: 'grey', 
+        backgroundColor: '#000038', 
         padding: 10, 
         borderRadius: 17, 
         margin: 10, 
         top: -5,
     },
     addButtonText: { 
-        color: '#fff', 
+        color: '#CCC9DC', 
         fontSize: 16, 
         marginLeft: 10,
+        fontWeight :'bold',
     },
     deleteButton: { 
         position: 'absolute', 
         right: 10, 
         top: 15,
+
     },
     modalContainer: { 
         flex: 1, 
@@ -224,7 +229,7 @@ const styles = StyleSheet.create({
     },
     modalContent: { 
         width: '80%', 
-        backgroundColor: '#fff', 
+        backgroundColor: '#edede9', 
         padding: 20, 
         borderRadius: 10,
     },
@@ -232,18 +237,21 @@ const styles = StyleSheet.create({
         fontSize: 20, 
         fontWeight: 'bold', 
         marginBottom: 10,
+        color : '#7e6c6c',
     },
     modalTextInput: {
         borderRadius: 5,
         marginBottom: 10,
-        color: 'black',
+        color: '#grey',
+        backgroundColor : '#edede9',
+        
     },
     modalButtons: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
     modalButton: {
-        backgroundColor: '#007bff',
+        backgroundColor: '#324a5f',
         height: 30,
         top: 6,
         borderRadius: 5,
@@ -263,7 +271,7 @@ const styles = StyleSheet.create({
     modalButtonX:{
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
+        
     },
     modalButtonTextX: {
         top: -20,

@@ -8,10 +8,9 @@ export const DateComponent = () => {
   const year = new Date().getFullYear().toString().slice(-2);
   return (
     <View style={styles.container}>
-      <Text style={styles.dateOfWeekText}>{dayOfWeek}</Text>
-      <View style= {styles.dateContainer}>
+      <View style = {styles.containerA}>
       <Text style={styles.dayText}>{day}</Text>
-      <Text style ={styles.yearText}>.{year}</Text>
+      <Text style={styles.dateOfWeekText}>{dayOfWeek}</Text>
       </View>
       <Text style={styles.monthText}>{month}</Text>
     </View>
@@ -21,32 +20,31 @@ export const DateComponent = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 70,
+    top: 40,
     left: 25,
-    alignItems: 'flex-start', // Align text to the start
+ // Align text to the start
+  },
+  containerA:{
+    flex : 1,
+    flexDirection : 'row',
+    justifyContent : 'space-between',
   },
   dateOfWeekText: {
-    fontSize: 15,
-    color: 'lightblue', // Color for better visibility on yellow background
+    fontSize: 16,
+    color: '#7e6c6c', // Color for better visibility on yellow background
+    top : 17,
   },
-  dateContainer:{
-    flexDirection:'row',
-  },
+
   dayText: {
     
     fontSize: 60,
-    color: 'white',
+    color: '#7e6c6c',
     fontWeight :'bold',
-  },
-  yearText:{
-    fontSize:60,
-    color : 'lightblue',
-    fontWeight: 'bold',
   },
   monthText: {
     top:-20,
     fontSize: 50,
-    color: 'white',
+    color: '#7e6c6c',
     fontWeight : 'bold',
   },
 });
