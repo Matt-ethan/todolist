@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TextInput, StyleSheet, Modal, Pressable } from 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Checkbox } from 'react-native-paper';
 import { DateComponent } from '@/components/date';
-//test
+
 export default function HomeScreen() {
     const [tasks, setTasks] = useState<{ text: string; description: string; labels: string[]; checked: boolean }[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -43,12 +43,6 @@ export default function HomeScreen() {
     };
 
     const handleOutsidePress = () => {
-        setModalVisible(false);
-    };
-
-    const openModalForEditing = (index: number) => {
-        const task = tasks[index];
-        setTaskText(task.text);
         setTaskDescription(task.description);
         setEditingIndex(index);
         setModalVisible(true);
@@ -56,41 +50,43 @@ export default function HomeScreen() {
 
     return (
         <Pressable onPress={handleOutsidePress} style={styles.container1}>
-            <DateComponent />
-            <View style={styles.content}>
-                <ScrollView style={styles.scrollContainer}>
-                    <View style={styles.items}>
-                        {tasks.map((task, index) => (
-                            <View
-                                key={index}
-                                style={[styles.taskCard, task.checked && styles.checkedTaskCard]}
-                            >
-                                <View style={styles.taskContent}>
-                                    <Checkbox
-                                        status={task.checked ? 'checked' : 'unchecked'}
-                                        onPress={() => toggleCheckbox(index)}
-                                    />
-                                    <Pressable onPress={() => openModalForEditing(index)} style={styles.editableContainer}>
-                                        <Text style={[styles.taskText, task.checked && styles.checkedText]}>
-                                            {task.text || "Take a note"}
-                                        </Text>
+            <View style={styles.DateandTaskContainer}>
+                <DateComponent />
+                <View style={styles.taskContainer}>
+                    <ScrollView style={styles.scrollContainer}>
+                        <View style={styles.items}>
+                            {tasks.map((task, index) => (
+                                <View
+                                    key={index}
+                                    style={[styles.taskCard, task.checked && styles.checkedTaskCard]}
+                                >
+                                    <View style={styles.taskContent}>
+                                        <Checkbox
+                                            status={task.checked ? 'checked' : 'unchecked'}
+                                            onPress={() => toggleCheckbox(index)}
+                                        />
+                                        <Pressable onPress={() => openModalForEditing(index)} style={styles.editableContainer}>
+                                            <Text style={[styles.taskText, task.checked && styles.checkedText]}>
+                                                {task.text || "Take a note"}
+                                            </Text>
+                                        </Pressable>
+                                    </View>
+
+                                    <Text style={[styles.taskDescription, task.checked && styles.checkedText]}>
+                                        {task.description || "No description"}
+                                    </Text>
+
+                                    <Pressable
+                                        style={styles.deleteButton}
+                                        onPress={() => deleteTask(index)}
+                                    >
+                                        <Icon name="delete" size={16} color="midred" />
                                     </Pressable>
                                 </View>
-
-                                <Text style={[styles.taskDescription, task.checked && styles.checkedText]}>
-                                    {task.description || "No description"}
-                                </Text>
-
-                                <Pressable
-                                    style={styles.deleteButton}
-                                    onPress={() => deleteTask(index)}
-                                >
-                                    <Icon name="delete" size={24} color="#ff0000" />
-                                </Pressable>
-                            </View>
-                        ))}
-                    </View>
-                </ScrollView>
+                            ))}
+                        </View>
+                    </ScrollView>
+                </View>
             </View>
             <Pressable style={styles.addButton} onPress={() => {
                 setTaskText('');
@@ -110,7 +106,12 @@ export default function HomeScreen() {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
+                        <View style ={styles.Container4}>
                         <Text style={styles.modalTitle}>{editingIndex !== null ? 'Edit Task' : 'Create New Task'}</Text>
+                        <Pressable style={styles.modalButtonX} onPress={() => setModalVisible(false)}>
+                                <Text style={styles.modalButtonTextX}>x</Text>
+                            </Pressable>
+                        </View>
                         <TextInput
                             style={styles.modalTextInput}
                             placeholder="Task Title"
@@ -126,11 +127,9 @@ export default function HomeScreen() {
                             onChangeText={setTaskDescription}
                         />
                         <View style={styles.modalButtons}>
+                            
                             <Pressable style={styles.modalButton} onPress={addOrUpdateTask}>
                                 <Text style={styles.modalButtonText}>{editingIndex !== null ? 'Update Task' : 'Add Task'}</Text>
-                            </Pressable>
-                            <Pressable style={styles.modalButton} onPress={() => setModalVisible(false)}>
-                                <Text style={styles.modalButtonText}>Cancel</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -145,18 +144,29 @@ const styles = StyleSheet.create({
         backgroundColor: '#252525',
         flex: 1,
     },
-    content: {
+    DateandTaskContainer: {
         flex: 1,
     },
-    scrollContainer: { flex: 1 },
-    items: { margin: 10 },
+    taskContainer: {
+        flex: 1, // This will make the ScrollView take the remaining space
+    },
+    scrollContainer: {
+        flex: 1,
+        top : 220,
+        height : 100,
+    },
+    items: {
+        margin: 10,
+    },
     taskCard: { 
         marginBottom: 10, 
-        borderRadius: 10, 
+        borderRadius: 15, 
         overflow: 'hidden', 
-        backgroundColor: '#ffffff',
         position: 'relative',
-        paddingRight: 40,
+        borderWidth : 1,
+        backgroundColor : 'black',
+
+        borderColor : 'white',
     },
     checkedTaskCard: {
         opacity: 0.5,
@@ -164,60 +174,70 @@ const styles = StyleSheet.create({
     taskContent: { 
         flexDirection: 'row', 
         alignItems: 'center', 
-        padding: 5, 
     },
     textContainer: {
         flex: 1,
         flexDirection: 'row',
     },
-    taskText: { fontSize: 16, fontWeight: 'bold', top: 7 },
+    taskText: { 
+        fontSize: 16, 
+        fontWeight: 'bold', 
+        top: -2,
+        color : 'white',
+    },
     checkedText: {
         textDecorationLine: 'line-through',
         color: '#aaa',
     },
-    textInput: { 
-        padding: 10, 
-        color: 'white',
-        borderWidth: 1, 
-        borderRadius: 5, 
-        marginVertical: 5, 
-    },
-    editableContainer: {
-        flex: 1,
-    },
     taskDescription: { 
-        fontSize: 14, 
+        top : -10,
+        fontSize: 12, 
         color: '#666', 
-        backgroundColor: '#f9f9f9', 
-        padding: 10
-    },
-    descriptionContainer: {
-        maxHeight: 100,  // Set a maximum height for the description field
-        minHeight: 40,   // Minimum height for a description field
-    },
-    descriptionInput: {
         padding: 10,
-        color: '#000',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
+        left: 30,
+        color : 'white',
+        width : '85%',
     },
     addButton: { 
+        justifyContent : 'center',
         flexDirection: 'row', 
         alignItems: 'center', 
-        backgroundColor: '#007bff', 
+        backgroundColor: 'grey', 
         padding: 10, 
         borderRadius: 17, 
         margin: 10, 
         top: -5,
     },
-    addButtonText: { color: '#fff', fontSize: 16, marginLeft: 10 },
-    deleteButton: { position: 'absolute', right: 10, top: 10 },
-    modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
-    modalContent: { width: '80%', backgroundColor: '#fff', padding: 20, borderRadius: 10 },
-    modalTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
+    addButtonText: { 
+        color: '#fff', 
+        fontSize: 16, 
+        marginLeft: 10,
+    },
+    deleteButton: { 
+        position: 'absolute', 
+        right: 10, 
+        top: 15,
+        
+    },
+    modalContainer: { 
+        flex: 1, 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        backgroundColor: 'rgba(0,0,0,0.5)' 
+    },
+    modalContent: { 
+        width: '80%', 
+        backgroundColor: '#fff', 
+        padding: 20, 
+        borderRadius: 10,
+    },
+    modalTitle: { 
+        fontSize: 20, 
+        fontWeight: 'bold', 
+        marginBottom: 10,
+    },
     modalTextInput: {
-        borderWidth: 1,
+        backgroundColor : '',
         borderRadius: 5,
         marginBottom: 10,
         color: 'black',
@@ -228,12 +248,35 @@ const styles = StyleSheet.create({
     },
     modalButton: {
         backgroundColor: '#007bff',
-        padding: 10,
+        height : 30,
+        top : 6,
         borderRadius: 5,
-        marginHorizontal: 5,
+        width : '100%',
+        justifyContent : 'center',
+        alignItems : 'center',
+
     },
     modalButtonText: {
         color: 'white',
-        fontSize: 16,
+        
     },
+    Container4:{
+        flexDirection : 'row',
+
+        height : 30,
+        marginBottom : 10,
+        justifyContent : 'space-between',
+    },
+    modalButtonX:{
+            justifyContent : 'center',
+            alignItems : 'center',
+            
+            backgroundColor : 'white',
+    },
+    modalButtonTextX : {
+        top : -20,
+        left : 8        ,
+        fontSize : 18,
+        color : 'grey',
+    }
 });
