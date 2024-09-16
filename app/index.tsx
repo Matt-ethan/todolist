@@ -144,6 +144,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#edede9',
         flex: 1,
     },
+    editableContainer: {
+
+    },
     DateandTaskContainer: {
         flex: 1,
     },
@@ -193,7 +196,7 @@ const styles = StyleSheet.create({
     taskDescription: { 
         top : -4,
         fontSize: 12, 
-        color: '#666', 
+        // color: '#666', 
         padding: 10,
         left: 35,
         marginBottom : 6,
